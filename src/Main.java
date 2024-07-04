@@ -33,5 +33,6 @@ public class Main {
             else
                 System.out.println(line.trim());
         }
+        System.out.println("Парсинг прошел успешно");
     }
 }
