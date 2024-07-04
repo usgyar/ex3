@@ -1,50 +1,37 @@
-import java.io.File;
+import java.io.BufferedInputStream;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) throws Exception {
         String fileName = "file.txt";
 
-        File file = new File(fileName);
-        if (!file.exists())
-            throw new FileNotFoundException("Файл не найден");
+        String[] lines;
+        try(BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(fileName))){
+            byte[] buffer = new byte[1024];
+            StringBuilder builder = new StringBuilder("");
 
-        FileInputStream fileInputStream = new FileInputStream(file);
-
-        int i;
-        ArrayList<String> lines = new ArrayList<>();
-        StringBuilder builder = new StringBuilder("");
-        while((i=fileInputStream.read())!= -1){
-            if ((char) i == '\n'){
-                lines.add(builder.toString());
-                builder = new StringBuilder("");
-            } else {
-                builder.append((char)i);
+            while ((bufferedInputStream.read(buffer))!= -1) {
+                builder.append(new String(buffer, 0, buffer.length));
             }
+            lines = builder.toString().split("\n");
         }
 
-        LetterOrDigitOnly cheak = new LetterOrDigitOnly();
-
-        for (String line : lines){
-            int idx1 = line.indexOf(" - ");
-            int idx2 = line.indexOf(" - ", idx1 + 1);
-
-            if (idx2 == -1 || line.indexOf(" - ", idx2 + 1) != -1)
-                System.out.println(line.trim() + ": Должно быть 3 элемента");
-            else if (!cheak.isLettersOnly(line.substring(0, idx1)))
-                System.out.println(line.trim() + ": Некорректное имя");
-            else if (!line.substring(idx1+3, idx1+6).equals("+79") ||
-                     !cheak.isDigitsOnly(line.substring(idx1+6, idx1+15)))
-                System.out.println(line.trim() + ": Некорректный номер");
-            else if (!cheak.isLettersAndDigitsOnly(line.substring(idx2+3, line.indexOf('@'))) ||
-                     !cheak.isLettersOnly(line.substring(line.indexOf('@') + 1, line.indexOf('.'))) ||
-                     !cheak.isLettersOnly(line.substring(line.indexOf('.') + 1, line.length()-1)))
-                System.out.println(line.trim() + ": Некорректный эл. адрес");
+        LettersAndDigitsOnly cheak = new LettersAndDigitsOnly();
+        for (String line: lines){
+            String[] elements = line.split(" - ");
+            if (elements.length != 3)
+                System.err.println(line.trim() + ": Должно быть 3 элемента");
+            else if (!cheak.isLettersOnly(elements[0]))
+                System.err.println(line.trim() + ": Некорректное имя");
+            else if (!elements[1].substring(0, 3).equals("+79") || elements[1].length() != 12 ||
+                     !cheak.isDigitsOnly(elements[1].substring(3, elements[1].length()-3)))
+                System.err.println(line.trim() + ": Некорректный номер");
+            else if (!cheak.isLettersAndDigitsOnly(elements[2].substring(0, elements[2].indexOf('@'))) ||
+                     !cheak.isLettersAndDigitsOnly(elements[2].substring(elements[2].indexOf('@') + 1, elements[2].indexOf('.'))) ||
+                     !cheak.isLettersOnly(elements[2].substring(elements[2].indexOf('.') + 1, elements[2].length() -1)))
+                System.err.println(line.trim() + ": Некорректная эл. почта");
             else
                 System.out.println(line.trim());
         }
-        System.out.println("Парсинг прошел успешно");
     }
 }
