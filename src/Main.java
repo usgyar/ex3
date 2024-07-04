@@ -30,7 +30,7 @@ public class Main {
 }
 
 
-/* чтобы получать причину не попадания под формат
+/* чтобы получать причину непопадания под формат
         Pattern name = Pattern.compile("^[A-Za-z]+$");
         Pattern number = Pattern.compile("^\\+79[0-9]{9}$");
         Pattern email = Pattern.compile("^[A-Za-z0-9+_.-]+@[a-z]+.[a-z]+$");
