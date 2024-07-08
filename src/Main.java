@@ -16,7 +16,7 @@ public class Main {
             }
             lines = builder.toString().split("\n");
         }
-        Pattern linePattern = Pattern.compile("^[A-Za-z]+ - \\+79[0-9]{9} - [A-Za-z0-9+_.-]+@[A-Za-z0-9]+\\.[a-z]+$");
+        Pattern linePattern = Pattern.compile("^[A-Za-z]+ - \\+79[0-9]{9} - [A-Za-z0-9+_.-]+@[A-Za-z0-9]+\\.[A-Za-z0-9]+$");
         for (String line: lines){
             if(!linePattern.matcher(line.trim()).matches())
                 System.err.println(line.trim() + ": Не подходит под формат");
