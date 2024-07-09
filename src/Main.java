@@ -21,17 +21,24 @@ public class Main {
             String[] elements = line.split(" - ");
             if (elements.length != 3)
                 System.err.println(line.trim() + ": Должно быть 3 элемента");
-            else if (!cheak.isLettersOnly(elements[0]))
-                System.err.println(line.trim() + ": Некорректное имя");
-            else if (!elements[1].substring(0, 3).equals("+79") || elements[1].length() != 12 ||
-                     !cheak.isDigitsOnly(elements[1].substring(3, elements[1].length()-3)))
-                System.err.println(line.trim() + ": Некорректный номер");
-            else if (!cheak.isLettersAndDigitsOnly(elements[2].substring(0, elements[2].indexOf('@'))) ||
-                     !cheak.isLettersAndDigitsOnly(elements[2].substring(elements[2].indexOf('@') + 1, elements[2].indexOf('.'))) ||
-                     !cheak.isLettersOnly(elements[2].substring(elements[2].indexOf('.') + 1, elements[2].length() -1)))
-                System.err.println(line.trim() + ": Некорректная эл. почта");
-            else
-                System.out.println(line.trim());
+            else {
+                String name = elements[0];
+                String phone = elements[1];
+                String email = elements[2];
+
+                if (!cheak.isLettersOnly(name))
+                    System.err.println(line.trim() + ": Некорректное имя");
+                else if (!phone.substring(0, 3).equals("+79") || phone.length() != 12 ||
+                        !cheak.isDigitsOnly(elements[1].substring(3, elements[1].length()-3)))
+                    System.err.println(line.trim() + ": Некорректный номер");
+                else if (!cheak.isLettersAndDigitsOnly(email.substring(0, email.indexOf('@'))) ||
+                        !cheak.isLettersAndDigitsOnly(email.substring(email.indexOf('@') + 1, email.indexOf('.'))) ||
+                        !cheak.isLettersOnly(email.substring(email.indexOf('.') + 1, email.length() -1)))
+                    System.err.println(line.trim() + ": Некорректная эл. почта");
+                else
+                    System.out.println(line.trim());
+
+            }
         }
         System.out.println("Парсинг прошел успешно");
     }
